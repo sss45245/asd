@@ -1,0 +1,20 @@
+# ✅ Start from a stable JupyterLab image
+FROM jupyter/scipy-notebook:latest
+
+# ✅ Switch to root to install system stuff
+USER root
+
+# ✅ Make sure you have a compatible Node.js version for JupyterLab extensions
+RUN conda install -y nodejs
+
+# ✅ Switch back to the default user
+USER ${NB_USER}
+
+# ✅ Copy your postBuild script into the image
+COPY binder/postBuild ./binder/postBuild
+
+# ✅ Make sure it’s executable
+RUN chmod +x binder/postBuild
+
+# ✅ Run your custom postBuild steps
+RUN ./binder/postBuild
